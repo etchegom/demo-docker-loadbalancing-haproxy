@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  lb:
+    image: eeacms/haproxy
+    depends_on:
+      - webapp
+    environment:
+      BALANCE: "roundrobin"
+      BACKENDS: "webapp:5000"
+      DNS_ENABLED: "true"
+      LOG_LEVEL: "info"
+    ports:
+      - "80:5000"
+      - "1936:1936"
